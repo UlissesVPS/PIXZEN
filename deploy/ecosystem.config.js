@@ -2,8 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'pixzen-api',
-      script: './backend-api/dist/index.js',
-      cwd: '/www/wwwroot',
+      script: '/www/wwwroot/pixzen-api/dist/index.js',
+      cwd: '/www/wwwroot/pixzen-api',
       instances: 1,
       exec_mode: 'fork',
       env: {
@@ -18,10 +18,10 @@ module.exports = {
     },
     {
       name: 'pixzen-whatsapp-ai',
-      script: './backend-whatsapp/dist/index.js',
-      cwd: '/www/wwwroot',
+      script: '/www/wwwroot/pixzen-whatsapp-ai/dist/index.js',
+      cwd: '/www/wwwroot/pixzen-whatsapp-ai',
       instances: 1,
-      exec_mode: 'cluster',
+      exec_mode: 'fork',
       env: {
         NODE_ENV: 'production',
         PORT: 3333,

@@ -134,11 +134,12 @@ Usuario ──> Browser ──> Nginx (443) ──> frontend (SPA) ────�
 - **PostgreSQL** (compartilhado com backend-api)
 
 ### Infraestrutura
-- **VPS Contabo** (Ubuntu 22.04)
+- **VPS Hostinger** (Ubuntu 22.04, 8GB RAM, 100GB SSD)
+- **IP:** 187.77.47.52
 - **Nginx** como reverse proxy + SSL
-- **PM2** como process manager
-- **BT Panel** para gerenciamento do servidor
-- **Let's Encrypt** para certificados SSL
+- **PM2** como process manager (auto-startup)
+- **Let's Encrypt** para certificados SSL (auto-renovacao)
+- **PostgreSQL 16** nativo (sem Docker)
 
 ---
 
