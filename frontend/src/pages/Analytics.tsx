@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, BarChart3, Download } from 'lucide-react';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { Button } from '@/components/ui/button';
 import { BarChart, Bar, ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend } from 'recharts';
 import { useFinance } from '@/contexts/FinanceContext';
@@ -199,9 +200,9 @@ export default function Analytics() {
       <div className="flex-1 flex flex-col min-h-screen">
         <header className="sticky top-0 z-40 glass border-b border-border/50">
           <div className="container flex h-14 items-center px-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/')} className="md:hidden">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+            <div className="md:hidden">
+              <MobileSidebar />
+            </div>
             <h1 className="flex-1 text-center md:text-left font-semibold text-sm">Analises</h1>
             <Button variant="ghost" size="icon" onClick={handleExportReport} title="Exportar Relatorio">
               <Download className="h-5 w-5" />

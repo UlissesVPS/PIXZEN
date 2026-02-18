@@ -18,6 +18,7 @@ import {
   ListChecks,
   Timer,
 } from 'lucide-react';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -453,9 +454,9 @@ export default function Reminders() {
         <header className="sticky top-0 z-40 glass border-b border-border/50">
           <div className="container flex h-16 items-center justify-between px-4">
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="md:hidden">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
+              <div className="md:hidden">
+                <MobileSidebar />
+              </div>
               <div className="flex items-center gap-2">
                 <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Bell className="h-4 w-4 text-primary" />

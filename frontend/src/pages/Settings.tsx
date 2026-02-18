@@ -7,9 +7,8 @@ import { useNotifications } from '@/contexts/NotificationsContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { DesktopSidebar } from '@/components/layout/DesktopSidebar';
 import { BottomNav } from '@/components/layout/BottomNav';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { cn } from '@/lib/utils';
-
-const ADMIN_EMAILS = ['admin@gmail.com'];
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ export default function Settings() {
   const { unreadCount } = useNotifications();
   const { signOut, user } = useAuth();
 
-  const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email);
+  const isAdmin = user?.is_admin === true;
 
   const handleLogout = async () => {
     await signOut();
@@ -32,9 +31,9 @@ export default function Settings() {
         {/* Header */}
         <header className="sticky top-0 z-40 glass border-b border-border/50">
           <div className="container flex h-16 items-center px-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/app')} className="md:hidden">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+            <div className="md:hidden">
+              <MobileSidebar />
+            </div>
             <h1 className="flex-1 text-center md:text-left font-semibold">Configurações</h1>
             <div className="w-10 md:hidden" />
           </div>

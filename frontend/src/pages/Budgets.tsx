@@ -5,6 +5,7 @@ import {
   ChevronLeft, ChevronRight, Copy, Trash2, Check, Edit2, X, Loader2,
   PieChart, Target, DollarSign, ShieldAlert,
 } from 'lucide-react';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -276,9 +277,9 @@ export default function Budgets() {
       <div className="flex-1 flex flex-col min-h-screen">
         <header className="sticky top-0 z-40 glass border-b border-border/50">
           <div className="container flex h-14 items-center justify-between px-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="md:hidden">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+            <div className="md:hidden">
+              <MobileSidebar />
+            </div>
             <h1 className="font-semibold text-sm flex-1 text-center md:text-left">Orcamento Mensal</h1>
             <Button variant="ghost" size="icon" onClick={() => setShowAddBudget(true)}>
               <Plus className="h-5 w-5" />

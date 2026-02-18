@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Check, Calendar, AlertCircle } from 'lucide-react';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useFinance } from '@/contexts/FinanceContext';
@@ -85,9 +86,9 @@ export default function Bills() {
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 glass border-b border-border/50">
         <div className="container flex h-14 items-center justify-between px-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+          <div className="md:hidden">
+            <MobileSidebar />
+          </div>
           <h1 className="font-semibold text-sm">Contas a Pagar</h1>
           <Button variant="ghost" size="icon" onClick={() => setShowAddBill(true)}>
             <Plus className="h-5 w-5" />

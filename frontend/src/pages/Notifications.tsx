@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bell, BellOff, Check, CheckCheck, Plus, Trash2, Calendar, Repeat, DollarSign, Clock, BellRing } from 'lucide-react';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -235,9 +236,9 @@ export default function Notifications() {
         <header className="sticky top-0 z-40 glass border-b border-border/50">
           <div className="container flex h-16 items-center justify-between px-4">
             <div className="flex items-center">
-              <Button variant="ghost" size="icon" onClick={() => navigate('/settings')} className="md:hidden">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
+              <div className="md:hidden">
+                <MobileSidebar />
+              </div>
               <h1 className="font-semibold ml-2 md:ml-0">Notificações</h1>
               {unreadCount > 0 && (
                 <span className="ml-2 h-5 min-w-5 px-1.5 rounded-full bg-primary text-primary-foreground text-xs font-medium flex items-center justify-center">

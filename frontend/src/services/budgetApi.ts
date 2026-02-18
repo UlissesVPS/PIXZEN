@@ -119,6 +119,70 @@ export const budgetApi = {
     const params: any = {};
     if (accountType) params.account_type = accountType;
     const { data } = await api.get('/budgets/insights', { params });
-    return data;
+
+    // Transform backend format to frontend Insights format
+    const raw = data as any;
+    const insightsArray = raw.insights || [];
+    const actions = raw.actions || {};
+    const spending = raw.spending || {};
+
+    // Extract anomalies from insights array
+    const anomalies: SpendingAnomaly[] = insightsArray
+      .filter((i: any) => i.type === 'anomaly')
+      .map((i: any) => ({
+        category_id: i.category || '',
+        current_amount: i.current || 0,
+        previous_amount: i.previous || 0,
+        increase_pct: i.current && i.previous ? ((i.current - i.previous) / i.previous) * 100 : 0,
+      }));
+
+    // Extract budget alerts
+    const budget_alerts: BudgetAlert[] = insightsArray
+      .filter((i: any) => i.type === 'budget_exceeded' || i.type === 'budget_warning')
+      .map((i: any) => ({
+        category_id: i.category || '',
+        budgeted: 0,
+        spent: 0,
+        pct: i.percentage || 0,
+      }));
+
+    // Extract month comparison
+    const month_comparison: MonthComparison[] = insightsArray
+      .filter((i: any) => i.type === 'comparison')
+      .map((i: any) => ({
+        category_id: 'total',
+        current: spending.current_month || 0,
+        previous: spending.previous_month || 0,
+        change_pct: i.change || 0,
+      }));
+
+    // Build projection
+    const dayOfMonth = spending.day_of_month || new Date().getDate();
+    const daysInMonth = spending.days_in_month || 30;
+    const projectionInsight = insightsArray.find((i: any) => i.type === 'projection');
+    const projection: SpendingProjection = {
+      projected_total: spending.projected || 0,
+      daily_average: spending.daily_average || 0,
+      days_elapsed: dayOfMonth,
+      days_in_month: daysInMonth,
+      run_rate_warning: !!projectionInsight,
+    };
+
+    // Top categories
+    const top_categories = (spending.top_categories || []).map((c: any) => ({
+      category_id: c.category_id,
+      total: c.total || 0,
+    }));
+
+    return {
+      anomalies,
+      projection,
+      budget_alerts,
+      month_comparison,
+      overdue_bills: [],
+      upcoming_bills: [],
+      goals_behind: [],
+      top_categories,
+    };
   },
 };

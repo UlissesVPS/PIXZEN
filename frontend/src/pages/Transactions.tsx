@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, Trash2, Pencil, Download, Building2, User, LayoutGrid, AlertTriangle, TrendingUp, TrendingDown } from 'lucide-react';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useFinance, TransactionType, Transaction, PaymentMethod, AccountType } from '@/contexts/FinanceContext';
@@ -198,9 +199,9 @@ export default function Transactions() {
         {/* Header */}
         <header className="sticky top-0 z-40 glass border-b border-border/50">
           <div className="container flex h-16 items-center px-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/')} className="md:hidden">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+            <div className="md:hidden">
+              <MobileSidebar />
+            </div>
             <h1 className="flex-1 text-center md:text-left font-semibold">Transações</h1>
             <Button variant="ghost" size="icon" onClick={handleExportCSV} title="Exportar CSV">
               <Download className="h-5 w-5" />

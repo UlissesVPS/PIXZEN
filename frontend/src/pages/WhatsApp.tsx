@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, MessageCircle, Check, Copy, RefreshCw, Smartphone, Unlink } from 'lucide-react';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
@@ -135,9 +136,9 @@ export default function WhatsApp() {
         {/* Header */}
         <header className="sticky top-0 z-40 glass border-b border-border/50">
           <div className="container flex h-16 items-center px-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/settings')} className="md:hidden">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+            <div className="md:hidden">
+              <MobileSidebar />
+            </div>
             <h1 className="flex-1 text-center md:text-left font-semibold">WhatsApp</h1>
             <div className="w-10 md:hidden" />
           </div>

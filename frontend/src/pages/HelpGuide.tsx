@@ -8,6 +8,7 @@ import {
   CalendarDays, BellRing, BarChart3, Download, UserCircle, Lock, Palette,
   CircleDollarSign, Phone, Bot, ListChecks, Clock, Repeat, Star
 } from 'lucide-react';
+import { MobileSidebar } from '@/components/layout/MobileSidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DesktopSidebar } from '@/components/layout/DesktopSidebar';
@@ -768,9 +769,9 @@ export default function HelpGuide() {
         {/* Header */}
         <header className="sticky top-0 z-40 glass border-b border-border/50">
           <div className="container flex h-16 items-center px-4 gap-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/settings')} className="md:hidden flex-shrink-0">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+            <div className="md:hidden flex-shrink-0">
+              <MobileSidebar />
+            </div>
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <BookOpen className="h-5 w-5 text-primary flex-shrink-0" />
               <h1 className="font-semibold truncate">Central de Ajuda</h1>

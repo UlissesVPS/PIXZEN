@@ -7,6 +7,7 @@ import { useFinance } from '@/contexts/FinanceContext';
 import { useNotifications } from '@/contexts/NotificationsContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { MobileSidebar } from './MobileSidebar';
 
 export function Header() {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ export function Header() {
     <header className="sticky top-0 z-40 glass border-b border-border/50">
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
+          {/* Mobile Hamburger Menu */}
+          <MobileSidebar />
+
           <img
             src={isDark ? "/logo-dark.png" : "/logo-light.png"}
             alt="PixZen"
@@ -80,7 +84,9 @@ export function Header() {
             )}
           </Button>
 
-          <ThemeToggle />
+          <div className="hidden md:block">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </header>
