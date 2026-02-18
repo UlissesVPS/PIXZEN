@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return localStorage.getItem('pixzen-demo-mode') === 'true';
   });
 
+  // Token refresh: re-validate session periodically
   useEffect(() => {
     // If in demo mode, set demo user
     if (isDemoMode) {
@@ -57,19 +58,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    authApi.getMe()
-      .then(({ data }) => {
-        setUser(data.user || data);
-      })
-      .catch(() => {
-        // Token is invalid or expired - clean up
-        localStorage.removeItem('pixzen-token');
-        localStorage.removeItem('pixzen-user');
-        setUser(null);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    const validateToken = () => {
+      authApi.getMe()
+        .then(({ data }) => {
+          setUser(data.user || data);
+          // If server returns a new token, update it
+          if (data.token) {
+            localStorage.setItem('pixzen-token', data.token);
+          }
+        })
+        .catch((err) => {
+          // Only clear if truly unauthorized (401), not network errors
+          if (err?.response?.status === 401) {
+            localStorage.removeItem('pixzen-token');
+            localStorage.removeItem('pixzen-user');
+            setUser(null);
+          }
+          // For network errors, keep current user state
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    };
+
+    validateToken();
+
+    // Re-validate every 30 minutes to keep session alive
+    const refreshInterval = setInterval(validateToken, 30 * 60 * 1000);
+    return () => clearInterval(refreshInterval);
   }, [isDemoMode]);
 
   const signUp = async (email: string, password: string, name: string) => {
