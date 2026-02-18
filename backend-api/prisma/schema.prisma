@@ -1,0 +1,274 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password_hash String
+  name          String?
+  is_admin      Boolean  @default(false)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  profile        Profile?
+  assinante      Assinante?
+  transactions   Transaction[]
+  whatsapp_users WhatsAppUser[]
+  usage_records  WhatsAppUsage[]
+  ai_usage_logs  AIUsageLog[]
+  credit_cards   CreditCard[]
+  bills          Bill[]
+  receivables    Receivable[]
+  reminders      Reminder[]
+  goals          Goal[]
+
+  @@map("users")
+}
+
+model Profile {
+  id         String   @id @default(uuid())
+  user_id    String   @unique
+  nome       String?
+  avatar_url String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Assinante {
+  id             String    @id @default(uuid())
+  user_id        String    @unique
+  status         String    @default("trial")
+  plano          String    @default("trial")
+  data_expiracao DateTime?
+  criado_em      DateTime  @default(now())
+  atualizado_em  DateTime  @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("assinantes")
+}
+
+model Transaction {
+  id                   String   @id @default(uuid())
+  user_id              String
+  description          String
+  amount               Decimal  @db.Decimal(12, 2)
+  type                 String
+  category_id          String
+  date                 DateTime @default(now())
+  account_type         String   @default("personal")
+  source               String?
+  payment_method       String?
+  card_id              String?
+  installments         Int?
+  current_installment  Int?
+  installment_group_id String?
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, date])
+  @@index([user_id, account_type])
+  @@map("transactions")
+}
+
+model WhatsAppUser {
+  id         String   @id @default(uuid())
+  phone      String   @unique
+  name       String
+  user_id    String?
+  is_linked  Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user       User?              @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  link_codes WhatsAppLinkCode[]
+
+  @@map("whatsapp_users")
+}
+
+model WhatsAppLinkCode {
+  id               String   @id @default(uuid())
+  whatsapp_user_id String
+  code             String
+  expires_at       DateTime
+  used             Boolean  @default(false)
+  created_at       DateTime @default(now())
+
+  whatsapp_user WhatsAppUser @relation(fields: [whatsapp_user_id], references: [id], onDelete: Cascade)
+
+  @@index([code, used])
+  @@map("whatsapp_link_codes")
+}
+
+model WhatsAppUsage {
+  id                 String   @id @default(uuid())
+  user_id            String
+  month              String
+  messages_count     Int      @default(0)
+  audio_count        Int      @default(0)
+  image_count        Int      @default(0)
+  transactions_count Int      @default(0)
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, month])
+  @@map("whatsapp_usage")
+}
+
+model AIConfig {
+  id           String @id @default(uuid())
+  config_key   String @unique
+  config_value String
+
+  @@map("ai_config")
+}
+
+model AIUsageLog {
+  id            String   @id @default(uuid())
+  user_id       String?
+  model         String
+  input_tokens  Int
+  output_tokens Int
+  cost_usd      Decimal  @db.Decimal(10, 6)
+  request_type  String
+  created_at    DateTime @default(now())
+
+  user User? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@index([created_at])
+  @@map("ai_usage_logs")
+}
+
+model MessageTemplate {
+  id               String   @id @default(uuid())
+  template_key     String   @unique
+  template_name    String   @default("")
+  template_type    String   @default("whatsapp")
+  template_content String
+  variables        String[] @default([])
+  is_active        Boolean  @default(true)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  @@map("message_templates")
+}
+
+model CreditCard {
+  id           String   @id @default(uuid())
+  user_id      String
+  name         String
+  last_digits  String
+  brand        String
+  card_limit   Decimal  @db.Decimal(12, 2)
+  used_limit   Decimal  @db.Decimal(12, 2) @default(0)
+  due_day      Int
+  closing_day  Int
+  color        String   @default("#10b981")
+  account_type String   @default("personal")
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("credit_cards")
+}
+
+model Bill {
+  id           String   @id @default(uuid())
+  user_id      String
+  description  String
+  amount       Decimal  @db.Decimal(12, 2)
+  due_date     DateTime
+  category_id  String
+  status       String   @default("pending")
+  recurrence   String?
+  account_type String   @default("personal")
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("bills")
+}
+
+model Receivable {
+  id            String   @id @default(uuid())
+  user_id       String
+  description   String
+  amount        Decimal  @db.Decimal(12, 2)
+  expected_date DateTime
+  category_id   String
+  status        String   @default("pending")
+  payer         String?
+  account_type  String   @default("personal")
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("receivables")
+}
+
+model Reminder {
+  id                   String    @id @default(uuid())
+  user_id              String
+  title                String
+  description          String    @default("")
+  amount               Decimal?  @db.Decimal(12, 2)
+  due_date             DateTime
+  due_time             String?   // HH:mm format
+  recurring            String    @default("none") // none, daily, weekly, monthly, yearly
+  enabled              Boolean   @default(true)
+  category             String    @default("custom") // bill, goal, custom
+  advance_notification String    @default("same_day") // none, same_day, 1_hour, 1_day, 2_days, 1_week
+  completed            Boolean   @default(false)
+  completed_at         DateTime?
+  created_at           DateTime  @default(now())
+  updated_at           DateTime  @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([user_id, due_date])
+  @@index([enabled, due_date])
+  @@map("reminders")
+}
+
+model Goal {
+  id             String    @id @default(uuid())
+  user_id        String
+  title          String
+  description    String    @default("")
+  target_amount  Decimal   @db.Decimal(12, 2)
+  current_amount Decimal   @default(0) @db.Decimal(12, 2)
+  category       String    @default("savings")
+  icon           String    @default("🎯")
+  color          String    @default("#8B5CF6")
+  deadline       DateTime?
+  completed      Boolean   @default(false)
+  completed_at   DateTime?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("goals")
+}
