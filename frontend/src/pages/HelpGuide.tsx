@@ -65,7 +65,7 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
         estimatedTime: '2 min',
         steps: [
           { step: 1, title: 'Acesse a pagina de login', description: 'Clique em "Comecar Gratis" na pagina inicial ou acesse /auth' },
-          { step: 2, title: 'Preencha seus dados', description: 'Informe seu nome, email e crie uma senha segura (minimo 6 caracteres)' },
+          { step: 2, title: 'Preencha seus dados', description: 'Informe seu nome, email e crie uma senha segura (minimo 8 caracteres, com maiusculas, minusculas e numeros)' },
           { step: 3, title: 'Crie sua conta', description: 'Clique em "Criar Conta" e voce sera redirecionado automaticamente ao painel' },
           { step: 4, title: 'Aproveite o trial', description: 'Voce ganha 7 dias gratis com acesso a TODAS as funcionalidades premium!' },
         ],
@@ -543,7 +543,7 @@ const GUIDE_CATEGORIES: GuideCategory[] = [
         estimatedTime: '1 min',
         steps: [
           { step: 1, title: 'Acesse Seguranca', description: 'Va em Configuracoes > Seguranca ou diretamente em /security' },
-          { step: 2, title: 'Altere sua senha', description: 'Informe a senha atual, nova senha (minimo 6 caracteres) e confirme' },
+          { step: 2, title: 'Altere sua senha', description: 'Informe a senha atual, nova senha (minimo 8 caracteres, com maiusculas, minusculas e numeros) e confirme' },
           { step: 3, title: 'Salve', description: 'Clique em "Alterar Senha" e pronto!' },
         ],
         tips: [
