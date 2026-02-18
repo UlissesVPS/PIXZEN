@@ -63,9 +63,7 @@ export default function AIAdmin() {
       return;
     }
 
-    // Check is_admin from user metadata or stored user data
-    const isUserAdmin = (user as any).is_admin || user.user_metadata?.is_admin;
-    if (isUserAdmin) {
+    if (user.is_admin === true) {
       setIsAdmin(true);
       await loadConfigs();
       await loadUsageStats();

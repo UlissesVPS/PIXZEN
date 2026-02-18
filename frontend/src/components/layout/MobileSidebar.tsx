@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Home, PieChart, Plus, List, Settings, User, Building2,
-  CalendarClock, Target, BookOpen, Wallet, Menu, X,
+  CalendarClock, Target, BookOpen, Wallet, Menu,
   Shield, LogOut, CreditCard, Receipt, HandCoins, Bell,
   MessageSquare, UserCircle
 } from 'lucide-react';
@@ -11,6 +11,12 @@ import { useFinance } from '@/contexts/FinanceContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from '@/components/ui/sheet';
 
 const mainNavItems = [
   { icon: Home, label: 'Dashboard', path: '/app' },
@@ -37,7 +43,7 @@ const settingsNavItems = [
 ];
 
 export function MobileSidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { accountType, setAccountType } = useFinance();
@@ -48,11 +54,11 @@ export function MobileSidebar() {
 
   const handleNavigate = (path: string) => {
     navigate(path);
-    setIsOpen(false);
+    setOpen(false);
   };
 
   const handleSignOut = async () => {
-    setIsOpen(false);
+    setOpen(false);
     await signOut();
   };
 
@@ -78,49 +84,29 @@ export function MobileSidebar() {
   };
 
   return (
-    <>
-      {/* Hamburger Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="md:hidden flex items-center justify-center h-10 w-10 rounded-lg hover:bg-secondary transition-colors"
-        aria-label="Abrir menu"
-      >
-        <Menu className="h-6 w-6 text-foreground" />
-      </button>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <button
+          className="md:hidden flex items-center justify-center h-10 w-10 rounded-lg hover:bg-secondary transition-colors"
+          aria-label="Abrir menu"
+        >
+          <Menu className="h-6 w-6 text-foreground" />
+        </button>
+      </SheetTrigger>
+      <SheetContent side="left" className="p-0 w-80 max-w-[85vw] flex flex-col" aria-describedby={undefined}>
+        <SheetTitle className="sr-only">Menu de navegacao</SheetTitle>
 
-      {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm md:hidden"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
-
-      {/* Sidebar Panel */}
-      <div
-        className={cn(
-          "fixed top-0 left-0 bottom-0 z-50 w-80 max-w-[85vw] bg-card border-r border-border shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden overflow-hidden flex flex-col",
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 h-16 border-b border-border flex-shrink-0">
+        <div className="flex items-center px-5 h-16 border-b border-border flex-shrink-0">
           <img
             src={isDark ? "/logo-dark.png" : "/logo-light.png"}
             alt="PixZen"
             className="h-7 w-auto"
           />
-          <button
-            onClick={() => setIsOpen(false)}
-            className="h-9 w-9 flex items-center justify-center rounded-lg hover:bg-secondary transition-colors"
-            aria-label="Fechar menu"
-          >
-            <X className="h-5 w-5 text-muted-foreground" />
-          </button>
         </div>
 
         {/* User Info */}
-        <div className="px-4 py-3 border-b border-border flex-shrink-0">
+        <div className="px-5 py-3 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
               <User className="h-5 w-5 text-primary" />
@@ -135,7 +121,7 @@ export function MobileSidebar() {
         </div>
 
         {/* Account Toggle */}
-        <div className="px-4 py-3 flex-shrink-0">
+        <div className="px-5 py-3 flex-shrink-0">
           <div className="bg-secondary rounded-xl p-1 flex">
             <button
               onClick={() => setAccountType('personal')}
@@ -213,7 +199,7 @@ export function MobileSidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="px-4 py-3 border-t border-border flex-shrink-0 space-y-3">
+        <div className="px-5 py-3 border-t border-border flex-shrink-0 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">Tema</span>
             <ThemeToggle />
@@ -226,7 +212,7 @@ export function MobileSidebar() {
             Sair da Conta
           </button>
         </div>
-      </div>
-    </>
+      </SheetContent>
+    </Sheet>
   );
 }
